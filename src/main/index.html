@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MycoCode Download</title>
+    <script>
+        function downloadPDF(param) {
+            // Make AJAX request to your Java backend
+            fetch('/generate-pdf?param=\' + param) // Replace with your endpoint
+                .then(response => response.blob())
+                .then(blob => {
+                    // Create a temporary link element
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = 'qr_slips.pdf'; // Set the download filename
+                    // Programmatically click the link
+                    link.click();
+                    // Clean up the temporary link
+                    URL.revokeObjectURL(link.href);
+                })
+                .catch(error => {
+                    console.error('Error downloading PDF:', error);
+                });
+        }
+    </script>
+</head>
+<body>
+<button onclick="downloadPDF(3)">Download QR Slips</button>
+</body>
+</html>
