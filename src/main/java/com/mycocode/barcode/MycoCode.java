@@ -60,6 +60,12 @@ public class MycoCode {
         return outputStream.toByteArray();
     }
 
+    /**
+     * Overlay each page of this document a QR code.
+     * @param doc - The original PDF image
+     * @param baseNum - Voucher number
+     * @param base - Voucher label
+     */
     static void insertImage(PDDocument doc, int baseNum, String base) throws IOException {
         for (int i = 0; i < doc.getNumberOfPages(); i++, baseNum++) {
             PDPage page = doc.getPage(i);
