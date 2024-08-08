@@ -6,6 +6,7 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.springframework.stereotype.Component;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+@Component
 public class MycoCode {
     final static boolean TEST_MODE = true;
     public static void main(String[] args) throws Exception, IOException, InterruptedException {
@@ -29,7 +31,7 @@ public class MycoCode {
         mc.generateSlips(2);
         System.out.println("End: " + (System.currentTimeMillis() - start) / 1000.0 + " seconds");
     }
-    public void generateSlips(int count) throws Exception {
+    public static byte[] generateSlips(int count) throws Exception {
         /*
         4) Put on Spring Boot
         5) Deploy to Firebase etc.
@@ -42,7 +44,7 @@ public class MycoCode {
             doc = PDDocument.load(file);
         } else {
             byte[] pdfBytes = SlipRequest.requestSlip();
-            FileOutputStream fos = new FileOutputStream("/tmp/fresh_slip.pdf");
+            FileOutputStream fos = new FileOutputStream("fresh_slip.pdf");
             fos.write(pdfBytes);
             fos.close();
             ByteArrayInputStream bais = new ByteArrayInputStream(pdfBytes);
@@ -52,17 +54,20 @@ public class MycoCode {
         String base = info.get(0);
         int num = Integer.parseInt(info.get(1));
         insertImage(doc, num, base);
-        doc.save("/tmp/qr_slips.pdf");
-        doc.close();
+        //doc.save("qr_slips.pdf");
+        //doc.close();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        doc.save(outputStream);
+        return outputStream.toByteArray();
     }
 
-    void insertImage(PDDocument doc, int baseNum, String base) throws IOException {
+    static void insertImage(PDDocument doc, int baseNum, String base) throws IOException {
         for (int i = 0; i < doc.getNumberOfPages(); i++, baseNum++) {
             PDPage page = doc.getPage(i);
             insertCode(doc, page, baseNum, base);
         }
     }
-    private void insertCode(PDDocument doc, PDPage page, int num, String base) throws IOException {
+    private static void insertCode(PDDocument doc, PDPage page, int num, String base) throws IOException {
         //PDImageXObject pdImage = PDImageXObject.createFromFile("/tmp/qr.png", doc);
         List<BufferedImage> QRs = Stream.of(num, ++num)
                 .map(i -> base + i)

@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>MycoCode Download</title>
     <script>
         function downloadPDF(param) {
             // Make AJAX request to your Java backend
-            fetch('/generate-pdf?param=\' + param) // Replace with your endpoint
+            //fetch('/generate-pdf?param=' + param)
+            fetch('/generate-pdf?count=' + param)
                 .then(response => response.blob())
                 .then(blob => {
                     // Create a temporary link element
