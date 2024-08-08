@@ -22,7 +22,6 @@ public class MycoCodeController {
     @GetMapping("/generate-pdf")
     public ResponseEntity<byte[]> generatePdf(@RequestParam(value = "count", defaultValue = "2") int count) {
         System.err.println("GeneratePDF");
-        System.out.println("GeneratePDF");
         try {
             byte[] pdfData = mycoCode.generateSlips(count);
 //            return ResponseEntity.ok("PDF generated successfully!")

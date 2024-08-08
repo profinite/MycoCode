@@ -39,12 +39,11 @@ public class MycoCode {
         */
         PDDocument doc;
         if (TEST_MODE) {
-           // File file = getPDF().toFile();
-            File file = new File("src/test/exemplar.pdf");
+            File file = new File("target/exemplar.pdf");
             doc = PDDocument.load(file);
         } else {
             byte[] pdfBytes = SlipRequest.requestSlip();
-            FileOutputStream fos = new FileOutputStream("fresh_slip.pdf");
+            FileOutputStream fos = new FileOutputStream("/tmp/fresh_slip.pdf");
             fos.write(pdfBytes);
             fos.close();
             ByteArrayInputStream bais = new ByteArrayInputStream(pdfBytes);
@@ -95,17 +94,6 @@ public class MycoCode {
             PDFTextStripper pdfStripper = new PDFTextStripper();
             String text = pdfStripper.getText(doc);
             return text.lines().limit(2);
-    }
-    public static Path getPDF() throws IOException {
-        String pdfUrl = "https://mycomap.com/index.php?app=mycocal&module=calendar&controller=slips&do=download&id=4658";
-        String downloadPath = "/tmp/slips.pdf";
-
-        // Using NIO for efficiency
-        Path targetPath = Path.of(downloadPath);
-        try (InputStream in = new URL(pdfUrl).openStream()) {
-            Files.copy(in, targetPath, StandardCopyOption.REPLACE_EXISTING);
-        }
-        return targetPath;
     }
 }
 

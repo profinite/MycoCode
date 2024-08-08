@@ -31,7 +31,7 @@ Content-Disposition: form-data; name="plupload"
 -----------------------------365609023425885959402198407856
 Content-Disposition: form-data; name="slip_event_values"
 
-130
+132
 -----------------------------365609023425885959402198407856
 Content-Disposition: form-data; name="slip_event_original"
 
@@ -54,7 +54,7 @@ Content-Disposition: form-data; name="slip_per_page"
 2
 -----------------------------365609023425885959402198407856--
 """;
-        String url = "https://mycomap.com/events/event-slips?event=130?form_slip_total=1?form_slip_per_page=2";
+        String url = "https://mycomap.com/events/event-slips?event=132?form_slip_total=1?form_slip_per_page=2";
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -64,7 +64,7 @@ Content-Disposition: form-data; name="slip_per_page"
                 .header("Accept-Language", "en-US,en;q=0.5")
                 .header("Accept-Encoding", "gzip, deflate, br, zstd")
                 .header("Content-Type", "multipart/form-data; boundary=---------------------------365609023425885959402198407856")
-                .header("Referer", "https://mycomap.com/events/event-slips?event=130?form_slip_total=1?form_slip_per_page=2")
+                .header("Referer", "https://mycomap.com/events/event-slips?event=132?form_slip_total=1?form_slip_per_page=2")
                 .header("Origin", "https://mycomap.com")
                 .header("Upgrade-Insecure-Requests", "1")
                 .header("Sec-Fetch-Dest", "document")
@@ -84,7 +84,7 @@ Content-Disposition: form-data; name="slip_per_page"
         return response.body();
     }
     private static void get() throws Exception {
-        String url = "https://mycomap.com/events/event-slips?event=130?form_slip_total=1?form_slip_per_page=2";
+        String url = "https://mycomap.com/events/event-slips?event=132?form_slip_total=1?form_slip_per_page=2";
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .GET()
