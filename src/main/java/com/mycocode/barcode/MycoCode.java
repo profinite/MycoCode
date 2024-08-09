@@ -19,9 +19,14 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+/**
+ * FIXME: Refactor this
+ * 1) Refactor
+ * 2) Add Exception handling for disconnected mycoblitz etc
+ */
 @Component
 public class MycoCode {
-    final static boolean TEST_MODE = true;
+    final static boolean TEST_MODE = false;
     public static void main(String[] args) throws Exception {
         System.out.println("Welcome to MycoCode!🍄");
         long start = System.currentTimeMillis();
@@ -41,10 +46,9 @@ public class MycoCode {
                 doc.removePage(i--);
                 continue;
             }
-            int begin = start + i * SLIPS_PER_PAGE;
+            int begin = start + i * SLIPS_PER_PAGE + 1; // begin count at 001
             int end = begin + SLIPS_PER_PAGE;
-            var range = IntStream.rangeClosed(++begin, end).boxed().collect(Collectors.toList());
-            Collections.reverse(range);
+            var range = IntStream.range(begin, end).boxed().collect(Collectors.toList()).reversed();
             drawPersonalSlips(doc, doc.getPage(i), range, initials);
         }
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -74,10 +78,18 @@ public class MycoCode {
         contentStream.close();
     }
     private static void drawText(PDPageContentStream content, float x, float y, String label) throws Exception {
-        content.setFont(PDType1Font.HELVETICA_BOLD, 26);
         content.beginText();
-        content.newLineAtOffset(x + 65, y + 5); // Adjust coordinates as needed
-        content.showText(label);
+//        content.newLineAtOffset(x + 65, y + 5); // Adjust coordinates as needed
+        content.newLineAtOffset(x + 65, y + 9); // Adjust coordinates as needed
+        content.setFont(PDType1Font.HELVETICA_BOLD, 22);
+//        content.setFont(PDType1Font.HELVETICA_BOLD, 26);
+        content.showText(" " + label);
+        content.setLeading(17.5f);
+        //content.setLeading(14.5f);
+        content.newLine();
+        content.setFont(PDType1Font.HELVETICA_BOLD, 8);
+        content.showText("!……….!……….!……….!……….!");
+        //content.newLineAtOffset(x + 65, y + 5); // Adjust coordinates as needed
         content.endText();
     }
 
@@ -118,9 +130,10 @@ public class MycoCode {
      */
     static void insertImage(PDDocument doc, int baseNum, String base) throws IOException {
         boolean duplex = doc.getNumberOfPages() != 1;
-        for (int i = 0; i < doc.getNumberOfPages(); i++, baseNum++) {
+        final int SLIPS_PER_PAGE = 2;
+        for (int i = 0; i < doc.getNumberOfPages(); i++) {
             PDPage page = doc.getPage(i);
-            insertCode(doc, page, baseNum + i * 2, base, duplex);
+            insertCode(doc, page, baseNum + i * SLIPS_PER_PAGE, base, duplex);
         }
     }
     private static void insertCode(PDDocument doc, PDPage page, int num, String base, boolean duplex) throws IOException {
@@ -129,7 +142,8 @@ public class MycoCode {
                 .map(i -> base + i)
                 .map(MycoCode::toINaturalistURL)
                 .map(Barcoder::generateQrcode)
-                .toList();
+                .toList()
+                .reversed();
         int index = 0;
         Point p = new Point(142.7f, 82.7f);
         p = new Point(p.x - 2.0f, p.y - 2.0f + 1.0f);
