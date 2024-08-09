@@ -1,26 +1,20 @@
 package com.mycocode.barcode;
 
-import org.apache.pdfbox.multipdf.LayerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.PDPageTree;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.pdfbox.pdmodel.graphics.form.PDFormXObject;
 import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
-import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -44,8 +38,7 @@ public class MycoCode {
 
         for(int i = 0; i < doc.getNumberOfPages(); i++) {
             if(i >= count / SLIPS_PER_PAGE) {
-                doc.removePage(i);
-                i--;
+                doc.removePage(i--);
                 continue;
             }
             int begin = start + i * SLIPS_PER_PAGE;
@@ -75,24 +68,29 @@ public class MycoCode {
             float column = index % 2 == 0 ? p.x : p.x + COLUMN_WIDTH;
             PDImageXObject pdImage = JPEGFactory.createFromImage(doc, qr);
             contentStream.drawImage(pdImage, column,  row);
-            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 26);
-            contentStream.beginText();
-            contentStream.newLineAtOffset(column + 65, row + 5); // Adjust coordinates as needed
-            contentStream.showText(initials + " " + pad.apply(range.get(index)));
-            contentStream.endText();
+            drawText(contentStream, column, row, initials + " " + pad.apply(range.get(index)));
             index++;
         }
         contentStream.close();
     }
+    private static void drawText(PDPageContentStream content, float x, float y, String label) throws Exception {
+        content.setFont(PDType1Font.HELVETICA_BOLD, 26);
+        content.beginText();
+        content.newLineAtOffset(x + 65, y + 5); // Adjust coordinates as needed
+        content.showText(label);
+        content.endText();
+    }
+
+    /**
+     * TODO: Add exception handling
+     * @param count - How many voucher slips to print
+     * @return Newly generated PDF
+     * @throws Exception
+     */
     public static byte[] generateSlips(int count) throws Exception {
-        /*
-        4) Put on Spring Boot
-        5) Deploy to Firebase etc.
-        6) Add Exception handling
-        */
         PDDocument doc;
         if (TEST_MODE) {
-            File file = ResourceUtils.getFile("classpath:exemplar.pdf");
+            File file = ResourceUtils.getFile("classpath:blankMycota.pdf");
             doc = PDDocument.load(file);
             System.err.println("Would normally generate: " + count + "slips.");
         } else {
@@ -107,8 +105,6 @@ public class MycoCode {
         String base = info.get(0);
         int num = Integer.parseInt(info.get(1));
         insertImage(doc, num, base);
-        //doc.save("qr_slips.pdf");
-        //doc.close();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         doc.save(outputStream);
         return outputStream.toByteArray();

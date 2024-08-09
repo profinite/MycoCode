@@ -16,7 +16,7 @@ public class Barcoder {
             qrCode = QrCode.encodeText(barcodeText, QrCode.Ecc.LOW);
             return toImage(qrCode, scale, 0);
         } catch(DataTooLongException e) {
-            System.err.println("Internal error, url is too long." + e.toString());
+            System.err.println("Internal error, url is too long." + e);
         }
         return null;
     }

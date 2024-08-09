@@ -10,7 +10,7 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 
 public class SlipRequest {
-    public static byte[] requestSlip(int count) throws Exception, IOException, InterruptedException {
+    public static byte[] requestSlip(int count) throws Exception {
         String bodyData = """
 -----------------------------365609023425885959402198407856
 Content-Disposition: form-data; name="form_submitted"
@@ -78,7 +78,6 @@ Content-Disposition: form-data; name="slip_per_page"
         HttpClient client = HttpClient.newHttpClient();
         System.err.println(request);
         HttpResponse<byte[]> response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
-        System.err.println(response.statusCode());
         System.err.println(response.statusCode());
         System.err.println(response.body().getClass());
         return response.body();

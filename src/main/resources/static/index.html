@@ -31,8 +31,9 @@
 <body>
 <img src="logo.jpg" alt="MycoCode Logo" style="display: block; margin: 0 auto;">
 <br>
-<label for="initials">Your Personal Voucher Prefix (eg, 3 letter initials):</label>
-<input type="text" id="initials" maxlength="3" pattern="[A-Za-z]{3}" value="JFK">
+<label for="initials">Personal Voucher Prefix (your name initials):</label>
+<input type="text" id="initials" maxlength="3" pattern="[A-Za-z]{3}" value="JFK" required>
+<!--input type="text" id="initials" maxlength="3" pattern="[A-Za-z]{3}" value="JFK"-->
 <br>
 <label for="start">Starting value:</label>
 <input type="number" id="start" min="0" max="900" value="0">
@@ -54,7 +55,7 @@
 <!-- button onclick="downloadPDF(3)">Download QR Slips</button -->
 <br>
 <hr>
-New! Generate <a href="mycoblitz.html">barcoded slips</a> for the Contintential Mycoblitz event, organized by Mycota.
+<b>New!</b> Get QR slips for the <a href="mycoblitz.html">Continental Mycoblitz</a> or <a href="fundis.html">FunDIS</a> projects.
 
 </body>
 </html>

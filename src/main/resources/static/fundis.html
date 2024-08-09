@@ -29,23 +29,25 @@
 <body>
 <img src="logo.jpg" alt="MycoCode Logo" style="display: block; margin: 0 auto;">
 <br>
-Labels for the <a href="https://mycota.com/continental-mycoblitz/" target="_blank">2024 Continental Mycoblitz</a> hosted by Mycota Lab. Personal vouchers <a href="index.html">here</a> or <a href="fundis.html">FunDIS</a>.
+Labels for the <a href="https://https://fundis.org/" target="_blank">Fungal Diversity Survey</a>. Personal vouchers <a href="index.html">here</a> or Mycota vouchers <a href="mycoblitz.html">here</a>.
 <hr>
 <br>
 <label for="slipCount">Number of Slips</label><select id="slipCount">
-    <option value="1">1</option>
+    <option value="4">4</option>
     <option value="8" selected>8</option>
     <option value="16">16</option>
-    <option value="32">32</option>
     <option value="48">48</option>
 </select>
 <br>
 
-<p>Slips per page:</p>
-<input type="radio" id="slipsPerPage2" name="slipsPerPage" value="2" checked>
-<label for="slipsPerPage2">2</label>
+<label for="initials">Optional: collector name initials:</label>
+<input type="text" id="initials" maxlength="3" pattern="[A-Za-z]{3}">
 <br>
-<input type="radio" id="slipsPerPage4" name="slipsPerPage" value="4" disabled>
+<label for="start">Starting Field Value:</label>
+<input type="number" id="start" min="0" max="900000" value="10000">
+<br>
+<p>Slips per page:</p>
+<input type="radio" id="slipsPerPage4" name="slipsPerPage" value="4" disabled checked>
 <label for="slipsPerPage4">4</label>
 <br>
 <!-- button onclick="downloadPDF(document.getElementById('slipCount').value)">Download QR Slips</button -->
@@ -53,6 +55,6 @@ Labels for the <a href="https://mycota.com/continental-mycoblitz/" target="_blan
 <br>
 <hr>
 <!-- button onclick="downloadPDF(3)">Download QR Slips</button -->
-<img src="directions.png" alt="Directions guide">
+<img src="fundis-directions.png" alt="Directions guide">
 </body>
 </html>
