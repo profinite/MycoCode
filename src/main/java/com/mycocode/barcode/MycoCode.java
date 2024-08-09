@@ -12,7 +12,6 @@ import org.springframework.util.ResourceUtils;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -97,7 +96,6 @@ public class MycoCode {
      * TODO: Add exception handling
      * @param count - How many voucher slips to print
      * @return Newly generated PDF
-     * @throws Exception
      */
     public static byte[] generateSlips(int count) throws Exception {
         PDDocument doc;
