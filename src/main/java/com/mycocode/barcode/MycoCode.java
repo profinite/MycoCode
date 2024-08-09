@@ -17,9 +17,11 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -37,50 +39,26 @@ public class MycoCode {
     }
     public static byte[] generatePersonalSlips(int count, int start, String initials) throws Exception {
         final int SLIPS_PER_PAGE = 24;
-        //File file = ResourceUtils.getFile("classpath:blankTags.pdf");
-        PDDocument doc = new PDDocument();
-
-        /* Layer a ruler template over it. */
-        // Process of imposing a layer begins here
-        //PDPageTree destinationPages = doc.getDocumentCatalog().getPages();
-
-        LayerUtility layerUtility = new LayerUtility(doc);
-
         File file = ResourceUtils.getFile("classpath:blankTags.pdf");
-        PDDocument templatePDF = PDDocument.load(file);
-        PDFormXObject firstForm = layerUtility.importPageAsForm(templatePDF, 0);
+        PDDocument doc = PDDocument.load(file);
 
-        for(int i = 0; i <= count / SLIPS_PER_PAGE; i++) {
-            PDPage page = new PDPage();
-            doc.addPage(page);
-            PDPageContentStream contentStream = new PDPageContentStream(doc, page, PDPageContentStream.AppendMode.APPEND, true);
-
-            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 16);
-            contentStream.beginText();
-            contentStream.showText("Maravilla");
-            // Some text
-            // Table 1 (Depending on table 1 size, pdf pages will increase)
-            contentStream.endText();
-            contentStream.close();
-
-            AffineTransform affineTransform = new AffineTransform();
-            PDPageTree destinationPages = doc.getDocumentCatalog().getPages();
-            PDPage destPage = destinationPages.get(i);
-            layerUtility.wrapInSaveRestore(destPage);
-            layerUtility.appendFormAsLayer(destPage, firstForm, affineTransform, "external page" + i);
-        }
-        for(int i = 0; i < count / SLIPS_PER_PAGE; i++) {
+        for(int i = 0; i < doc.getNumberOfPages(); i++) {
+            if(i >= count / SLIPS_PER_PAGE) {
+                doc.removePage(i);
+                i--;
+                continue;
+            }
             int begin = start + i * SLIPS_PER_PAGE;
             int end = begin + SLIPS_PER_PAGE;
-            drawPersonalSlips(doc, IntStream.rangeClosed(begin, end).boxed().toList(), initials);
+            var range = IntStream.rangeClosed(++begin, end).boxed().collect(Collectors.toList());
+            Collections.reverse(range);
+            drawPersonalSlips(doc, doc.getPage(i), range, initials);
         }
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         doc.save(outputStream);
         return outputStream.toByteArray();
     }
-    private static void drawPersonalSlips(PDDocument doc, List<Integer> range, String initials) throws Exception {
-        PDPage page = new PDPage();
-        doc.addPage(page);
+    private static void drawPersonalSlips(PDDocument doc, PDPage page, List<Integer> range, String initials) throws Exception {
         Function<Integer, String> pad = x -> String.format("%04d", x);
         List<BufferedImage> QRs = range.stream()
                 .map(x -> initials + pad.apply(x))
@@ -89,16 +67,18 @@ public class MycoCode {
                 .toList();
         PDPageContentStream contentStream = new PDPageContentStream(doc, page, PDPageContentStream.AppendMode.APPEND, false);
         int index = 0;
-        Point p = new Point(142, 10);
+        Point p = new Point(85, 105);
+        final int ROW_WIDTH = 26;
+        final int COLUMN_WIDTH = 227;
         for (BufferedImage qr : QRs) {
-            float lineOffset = index * 100 + p.y;
+            float row = index % 2 == 0 ? index * ROW_WIDTH + p.y : p.y + (index - 1) * ROW_WIDTH;
+            float column = index % 2 == 0 ? p.x : p.x + COLUMN_WIDTH;
             PDImageXObject pdImage = JPEGFactory.createFromImage(doc, qr);
-            contentStream.drawImage(pdImage, p.x,  lineOffset);
-            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 16);
+            contentStream.drawImage(pdImage, column,  row);
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 26);
             contentStream.beginText();
-            contentStream.newLineAtOffset(p.x + 100, lineOffset); // Adjust coordinates as needed
+            contentStream.newLineAtOffset(column + 65, row + 5); // Adjust coordinates as needed
             contentStream.showText(initials + " " + pad.apply(range.get(index)));
-            contentStream.newLine();
             contentStream.endText();
             index++;
         }

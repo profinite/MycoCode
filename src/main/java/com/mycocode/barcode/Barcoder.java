@@ -8,10 +8,13 @@ import java.util.Objects;
 
 public class Barcoder {
     public static BufferedImage generateQrcode(String barcodeText) {
+        return generateQrcode(barcodeText, 1);
+    }
+    public static BufferedImage generateQrcode(String barcodeText, int scale) {
         QrCode qrCode;
         try {
             qrCode = QrCode.encodeText(barcodeText, QrCode.Ecc.LOW);
-            return toImage(qrCode, 1, 0);
+            return toImage(qrCode, scale, 0);
         } catch(DataTooLongException e) {
             System.err.println("Internal error, url is too long." + e.toString());
         }
