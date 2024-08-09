@@ -20,11 +20,18 @@ public class MycoCodeController {
     private MycoCode mycoCode;
 
     @GetMapping("/generate-pdf")
-    public ResponseEntity<byte[]> generatePdf(@RequestParam(value = "count", defaultValue = "2") int count) {
+    public ResponseEntity<byte[]> generatePdf(
+            @RequestParam(value = "count", defaultValue = "1") int count,
+            @RequestParam(value = "start", defaultValue = "0") int start,
+            @RequestParam(value = "initials", defaultValue = "ZZZ") String initials) {
         System.err.println("GeneratePDF");
         try {
-            byte[] pdfData = mycoCode.generateSlips(count);
-//            return ResponseEntity.ok("PDF generated successfully!")
+            byte[] pdfData;
+            if(initials.equals("ZZZ") || initials.isEmpty())
+                pdfData = mycoCode.generateSlips(count);
+            else
+                pdfData = mycoCode.generatePersonalSlips(count, start, initials);
+            System.err.println(initials);
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=qr_slips.pdf")
                     .contentType(MediaType.APPLICATION_PDF)

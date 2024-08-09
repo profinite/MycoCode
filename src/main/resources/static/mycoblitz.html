@@ -3,14 +3,12 @@
 <head>
     <title>MycoCode Download</title>
     <script>
-        function downloadPDF(count, start, initials) {
-            count = parseInt(count);
-            start = parseInt(start);
+        function downloadPDF(param) {
+            param = parseInt(param);
 
             // Make AJAX request to your Java backend
             //fetch('/generate-pdf?param=' + param)
-            fetch('/generate-pdf?count=' + count + '&start=' + start + '&initials=' + initials)
-//            fetch('/generate-pdf?count=' + param)
+            fetch('/generate-pdf?count=' + param)
                 .then(response => response.blob())
                 .then(blob => {
                     // Create a temporary link element
@@ -31,30 +29,30 @@
 <body>
 <img src="logo.jpg" alt="MycoCode Logo" style="display: block; margin: 0 auto;">
 <br>
-<label for="initials">Your Personal Voucher Prefix (eg, 3 letter initials):</label>
-<input type="text" id="initials" maxlength="3" pattern="[A-Za-z]{3}" value="JFK">
+Labels for the <a href="https://mycoblitz.org">2024 Continental Mycoblitz</a> hosted by Mycota Lab. Personal vouchers <a href="index.html">here</a>.
+<hr>
 <br>
-<label for="start">Starting value:</label>
-<input type="number" id="start" min="0" max="900" value="0">
-<br>
-
 <label for="slipCount">Number of Slips</label><select id="slipCount">
-    <option value="24" selected>24</option>
+    <option value="1">1</option>
+    <option value="8" selected>8</option>
+    <option value="16">16</option>
+    <option value="32">32</option>
     <option value="48">48</option>
-    <option value="72">96</option>
 </select>
 <br>
+
 <p>Slips per page:</p>
-<input type="radio" id="slipsPerPage4" name="slipsPerPage" value="24" disabled checked>
-<label for="slipsPerPage4">24</label>
+<input type="radio" id="slipsPerPage2" name="slipsPerPage" value="2" checked>
+<label for="slipsPerPage2">2</label>
 <br>
-<button onclick="downloadPDF(document.getElementById('slipCount').value,
-        document.getElementById('start').value,
-        document.getElementById('initials').value)">Download PDF</button>
-<!-- button onclick="downloadPDF(3)">Download QR Slips</button -->
+<input type="radio" id="slipsPerPage4" name="slipsPerPage" value="4" disabled>
+<label for="slipsPerPage4">4</label>
+<br>
+<button onclick="downloadPDF(document.getElementById('slipCount').value)">Download QR Slips</button -->
+<br>
 <br>
 <hr>
-New! Generate <a href="mycoblitz.html">barcoded slips</a> for the Contintential Mycoblitz event, organized by Mycota.
-
+<!-- button onclick="downloadPDF(3)">Download QR Slips</button -->
+<img src="directions.png" alt="Directions guide">
 </body>
 </html>
