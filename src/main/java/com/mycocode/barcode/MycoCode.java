@@ -10,6 +10,7 @@ import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.List;
@@ -37,8 +38,16 @@ public class MycoCode {
     }
     public static byte[] generatePersonalSlips(int count, int start, String initials) throws Exception {
         final int SLIPS_PER_PAGE = 24;
-        File file = ResourceUtils.getFile("classpath:blankTags.pdf");
-        PDDocument doc = PDDocument.load(file);
+        PDDocument doc;
+        File file;
+        try {
+            file = ResourceUtils.getFile("classpath:blankTags.pdf");
+            doc = PDDocument.load(file);
+        }
+        catch(Exception e) {
+            file = ResourceUtils.getFile("blankTags.pdf");
+            doc = PDDocument.load(file);
+        }
 
         for(int i = 0; i < doc.getNumberOfPages(); i++) {
             if(i >= count / SLIPS_PER_PAGE) {
@@ -101,6 +110,8 @@ public class MycoCode {
         PDDocument doc;
         if (TEST_MODE) {
             File file = ResourceUtils.getFile("classpath:blankMycota.pdf");
+//            File file = ResourceUtils.getFile("blankTags.pdf");
+//            File file = new File("target/blankMycota.pdf");
             doc = PDDocument.load(file);
             System.err.println("Would normally generate: " + count + "slips.");
         } else {
