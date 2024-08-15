@@ -23,9 +23,12 @@ public class MycoCodeController {
             @RequestParam(value = "initials", defaultValue = "ZZZ") String initials) {
         System.err.println("GeneratePDF");
         try {
-            byte[] pdfData;
+            byte[] pdfData = null;
             if(initials.equals("ZZZ") || initials.isEmpty())
                 pdfData = mycoCode.generateSlips(count);
+            else if(initials.equals("FDS"))
+                ;
+//                pdfData = mycoCode.generateFundisSlips(count, start);
             else
                 pdfData = mycoCode.generatePersonalSlips(count, start, initials);
             System.err.println(initials);

@@ -7,6 +7,11 @@
             count = parseInt(count);
             start = parseInt(start);
 
+            if (initials.trim() === "" || !/^[A-Za-z]{2,3}$/.test(initials)) {
+                alert("Please enter 2-3 letter initials to identify your vouchers.");
+                return false;
+            }
+
             // Make AJAX request to your Java backend
             //fetch('/generate-pdf?param=' + param)
             fetch('/generate-pdf?count=' + count + '&start=' + start + '&initials=' + initials)
@@ -21,6 +26,7 @@
                     link.click();
                     // Clean up the temporary link
                     URL.revokeObjectURL(link.href);
+                    return false;
                 })
                 .catch(error => {
                     console.error('Error downloading PDF:', error);
@@ -32,7 +38,7 @@
 <img src="logo.jpg" alt="MycoCode Logo" style="display: block; margin: 0 auto;">
 <br>
 <label for="initials">Personal Voucher Prefix (your name initials):</label>
-<input type="text" id="initials" maxlength="3" pattern="[A-Za-z]{3}" value="JFK" required>
+<input type="text" id="initials" maxlength="3" pattern="[A-Za-z]{3}" required>
 <!--input type="text" id="initials" maxlength="3" pattern="[A-Za-z]{3}" value="JFK"-->
 <br>
 <label for="start">Starting value:</label>
@@ -49,9 +55,13 @@
 <input type="radio" id="slipsPerPage4" name="slipsPerPage" value="24" disabled checked>
 <label for="slipsPerPage4">24</label>
 <br>
-<button onclick="downloadPDF(document.getElementById('slipCount').value,
+
+<form onsubmit="downloadPDF(document.getElementById('slipCount').value, document.getElementById('start').value, document.getElementById('initials').value); return false">
+    <button type="submit">Download PDF</button>
+</form>
+<!-- button onclick="downloadPDF(document.getElementById('slipCount').value,
         document.getElementById('start').value,
-        document.getElementById('initials').value)">Download PDF</button>
+        document.getElementById('initials').value)">Download PDF</button -->
 <!-- button onclick="downloadPDF(3)">Download QR Slips</button -->
 <br>
 <hr>

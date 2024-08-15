@@ -9,7 +9,7 @@ public class MycoCodeApplication {
     public static void main(String[] args) {
         System.out.println("Welcome to MycoCode!🍄 ----------------");
         SpringApplication.run(MycoCodeApplication.class, args);
-        System.out.println("Welcome to MycoCode!🍄 ----------------");
+        System.out.println("Welcome to MycoCode!🍄 Ready to  begin ----------------");
     }
 
 }

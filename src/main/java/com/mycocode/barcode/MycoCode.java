@@ -10,7 +10,6 @@ import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.List;
@@ -27,15 +26,22 @@ import java.util.stream.Stream;
 @Component
 public class MycoCode {
     final static boolean TEST_MODE = false;
+    /* purely for prototyping, not related to Spring */
     public static void main(String[] args) throws Exception {
         System.out.println("Welcome to MycoCode!🍄");
         long start = System.currentTimeMillis();
-//        System.out.println(IntStream.range(0, 6));
         IntStream.range(0, 6).forEach(System.out::println);
-//        IntStream.range(0, 6).forEach(System.out::println);
         MycoCode.generateSlips(2);
         System.out.println("End: " + (System.currentTimeMillis() - start) / 1000.0 + " seconds");
     }
+
+    /**
+     * @param count - How many slips to generate
+     * @param start - beginning number for this series
+     * @param initials - Collector's three-letter initials
+     * @return PDF byte stream
+     * @throws Exception
+     */
     public static byte[] generatePersonalSlips(int count, int start, String initials) throws Exception {
         final int SLIPS_PER_PAGE = 24;
         PDDocument doc;
@@ -63,6 +69,13 @@ public class MycoCode {
         doc.save(outputStream);
         return outputStream.toByteArray();
     }
+
+    /**
+     * Create a personal voucher label
+     * @param range - numbers to print
+     * @param initials - collector's initials
+     * @throws Exception for usual IO reasons
+     */
     private static void drawPersonalSlips(PDDocument doc, PDPage page, List<Integer> range, String initials) throws Exception {
         Function<Integer, String> pad = x -> String.format("%04d", x);
         List<BufferedImage> QRs = range.stream()
@@ -85,12 +98,12 @@ public class MycoCode {
         }
         contentStream.close();
     }
+    // Helper function to write the label text
     private static void drawText(PDPageContentStream content, float x, float y, String label) throws Exception {
         content.beginText();
 //        content.newLineAtOffset(x + 65, y + 5); // Adjust coordinates as needed
         content.newLineAtOffset(x + 65, y + 9); // Adjust coordinates as needed
         content.setFont(PDType1Font.HELVETICA_BOLD, 22);
-//        content.setFont(PDType1Font.HELVETICA_BOLD, 26);
         content.showText(" " + label);
         content.setLeading(17.5f);
         //content.setLeading(14.5f);
@@ -104,19 +117,17 @@ public class MycoCode {
     /**
      * TODO: Add exception handling
      * @param count - How many voucher slips to print
-     * @return Newly generated PDF
+     * @return ByteStream of Newly generated PDF
      */
     public static byte[] generateSlips(int count) throws Exception {
         PDDocument doc;
         if (TEST_MODE) {
             File file = ResourceUtils.getFile("classpath:blankMycota.pdf");
-//            File file = ResourceUtils.getFile("blankTags.pdf");
-//            File file = new File("target/blankMycota.pdf");
             doc = PDDocument.load(file);
             System.err.println("Would normally generate: " + count + "slips.");
         } else {
             byte[] pdfBytes = SlipRequest.requestSlip(count);
-            FileOutputStream fos = new FileOutputStream("/tmp/fresh_slip.pdf");
+            FileOutputStream fos = new FileOutputStream("fresh_slip.pdf");
             fos.write(pdfBytes);
             fos.close();
             ByteArrayInputStream bais = new ByteArrayInputStream(pdfBytes);
@@ -166,23 +177,18 @@ public class MycoCode {
         }
     }
     private record Point (float x, float y) {}
-    static String toINaturalistURL(String voucherNum) {
+    private static String toINaturalistURL(String voucherNum) {
         final String iNaturalistBase = "https://www.inaturalist.org/observations?verifiable=any&place_id=any&field:Voucher%20Number(s)=";
         return iNaturalistBase + voucherNum;
     }
-    static String toINaturalistURLTag(String tag) {
+    private static String toINaturalistURLTag(String tag) {
         final String iNaturalistBase = "https://www.inaturalist.org/observations?q=";
         return iNaturalistBase + tag;
     }
-    static Stream<String> getVoucherInfo(PDDocument doc) throws IOException {
+    private static Stream<String> getVoucherInfo(PDDocument doc) throws IOException {
             // eg, "CM23-07508";
             PDFTextStripper pdfStripper = new PDFTextStripper();
             String text = pdfStripper.getText(doc);
             return text.lines().limit(2);
     }
 }
-
-
-
-
-
