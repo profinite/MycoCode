@@ -1,36 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+<script src="ajax.js"></script>
 <head>
     <title>MycoCode Download</title>
     <script>
-        function downloadPDF(count, start, initials) {
-            count = parseInt(count);
-            start = parseInt(start);
-
+        function download(count, start, initials) {
             if (initials.trim() === "" || !/^[A-Za-z]{2,3}$/.test(initials)) {
                 alert("Please enter 2-3 letter initials to identify your vouchers.");
                 return false;
             }
-
-            // Make AJAX request to your Java backend
-            //fetch('/generate-pdf?param=' + param)
-            fetch('/generate-pdf?count=' + count + '&start=' + start + '&initials=' + initials)
-//            fetch('/generate-pdf?count=' + param)
-                .then(response => response.blob())
-                .then(blob => {
-                    // Create a temporary link element
-                    const link = document.createElement('a');
-                    link.href = URL.createObjectURL(blob);
-                    link.download = 'qr_slips.pdf'; // Set the download filename
-                    // Programmatically click the link
-                    link.click();
-                    // Clean up the temporary link
-                    URL.revokeObjectURL(link.href);
-                    return false;
-                })
-                .catch(error => {
-                    console.error('Error downloading PDF:', error);
-                });
+            downloadPDF(count, start, initials);
         }
     </script>
 </head>
@@ -56,7 +35,7 @@
 <label for="slipsPerPage4">24</label>
 <br>
 
-<form onsubmit="downloadPDF(document.getElementById('slipCount').value, document.getElementById('start').value, document.getElementById('initials').value); return false">
+<form onsubmit="download(document.getElementById('slipCount').value, document.getElementById('start').value, document.getElementById('initials').value); return false">
     <button type="submit">Download PDF</button>
 </form>
 <!-- button onclick="downloadPDF(document.getElementById('slipCount').value,

@@ -20,15 +20,14 @@ public class MycoCodeController {
     public ResponseEntity<byte[]> generatePdf(
             @RequestParam(value = "count", defaultValue = "1") int count,
             @RequestParam(value = "start", defaultValue = "0") int start,
-            @RequestParam(value = "initials", defaultValue = "ZZZ") String initials) {
+            @RequestParam(value = "initials") String initials) {
         System.err.println("GeneratePDF");
         try {
             byte[] pdfData = null;
-            if(initials.equals("ZZZ") || initials.isEmpty())
+            if(initials.isEmpty())
                 pdfData = mycoCode.generateSlips(count);
             else if(initials.equals("FDS"))
-                ;
-//                pdfData = mycoCode.generateFundisSlips(count, start);
+                pdfData = mycoCode.generateFundisSlips(count, start);
             else
                 pdfData = mycoCode.generatePersonalSlips(count, start, initials);
             System.err.println(initials);

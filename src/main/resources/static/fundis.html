@@ -1,47 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+<script src="ajax.js"></script>
 <head>
     <title>MycoCode Download</title>
-    <script>
-        function downloadPDF(param) {
-            param = parseInt(param);
-
-            // Make AJAX request to your Java backend
-            //fetch('/generate-pdf?param=' + param)
-            fetch('/generate-pdf?count=' + param)
-                .then(response => response.blob())
-                .then(blob => {
-                    // Create a temporary link element
-                    const link = document.createElement('a');
-                    link.href = URL.createObjectURL(blob);
-                    link.download = 'qr_slips.pdf'; // Set the download filename
-                    // Programmatically click the link
-                    link.click();
-                    // Clean up the temporary link
-                    URL.revokeObjectURL(link.href);
-                })
-                .catch(error => {
-                    console.error('Error downloading PDF:', error);
-                });
-        }
-    </script>
 </head>
 <body>
 <img src="logo.jpg" alt="MycoCode Logo" style="display: block; margin: 0 auto;">
 <br>
-Labels for the <a href="https://https://fundis.org/" target="_blank">Fungal Diversity Survey</a>. Personal vouchers <a href="index.html">here</a> or Mycota vouchers <a href="mycoblitz.html">here</a>.
+Labels for the <a href="https://fundis.org/" target="_blank">Fungal Diversity Survey</a>. Personal vouchers <a href="index.html">here</a> or Mycota vouchers <a href="mycoblitz.html">here</a>.
 <hr>
 <br>
 <label for="slipCount">Number of Slips</label><select id="slipCount">
     <option value="4">4</option>
     <option value="8" selected>8</option>
     <option value="16">16</option>
-    <option value="48">48</option>
 </select>
 <br>
 
-<label for="initials">Optional: collector name initials:</label>
-<input type="text" id="initials" maxlength="3" pattern="[A-Za-z]{3}">
+<!-- label for="initials">Optional: collector name initials:</label>
+<input type="text" id="initials" maxlength="3" pattern="[A-Za-z]{3}" -->
 <br>
 <label for="start">Starting Field Value:</label>
 <input type="number" id="start" min="0" max="900000" value="10000">
@@ -50,7 +27,9 @@ Labels for the <a href="https://https://fundis.org/" target="_blank">Fungal Dive
 <input type="radio" id="slipsPerPage4" name="slipsPerPage" value="4" disabled checked>
 <label for="slipsPerPage4">4</label>
 <br>
-<!-- button onclick="downloadPDF(document.getElementById('slipCount').value)">Download QR Slips</button -->
+<button onclick="downloadPDF(document.getElementById('slipCount').value,
+        document.getElementById('start').value,
+        'FDS'); return false">Download QR Slips</button>
 <br>
 <br>
 <hr>

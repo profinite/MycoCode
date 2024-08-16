@@ -10,6 +10,7 @@ import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.List;
@@ -185,10 +186,63 @@ public class MycoCode {
         final String iNaturalistBase = "https://www.inaturalist.org/observations?q=";
         return iNaturalistBase + tag;
     }
+    private static String toINaturalistURLField(String num) {
+        final String iNaturalistBase = "https://www.inaturalist.org/observations?verifiable=any&place_id=any&field:Field%20number=";
+        return iNaturalistBase + num;
+    }
     private static Stream<String> getVoucherInfo(PDDocument doc) throws IOException {
             // eg, "CM23-07508";
             PDFTextStripper pdfStripper = new PDFTextStripper();
             String text = pdfStripper.getText(doc);
             return text.lines().limit(2);
+    }
+    public static byte[] generateFundisSlips(int count, int start) throws Exception {
+        final int SLIPS_PER_PAGE = 4;
+        PDDocument doc;
+        File file;
+            file = ResourceUtils.getFile("classpath:blankFundis.pdf");
+            doc = PDDocument.load(file);
+
+        for(int i = 0; i < doc.getNumberOfPages(); i++) {
+            if(i >= count / SLIPS_PER_PAGE) {
+                doc.removePage(i--);
+                continue;
+            }
+            int begin = start + i * SLIPS_PER_PAGE + 1; // begin count at 001
+            int end = begin + SLIPS_PER_PAGE;
+            var range = IntStream.range(begin, end).boxed().collect(Collectors.toList()).reversed();
+            drawFundisSlips(doc, doc.getPage(i), range);
+        }
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        doc.save(outputStream);
+        return outputStream.toByteArray();
+    }
+    private static void drawFundisSlips(PDDocument doc, PDPage page, List<Integer> range) throws Exception {
+        Function<Integer, String> pad = x -> String.format("%04d", x);
+        List<BufferedImage> QRs = range.stream()
+                .map(pad)
+                .map(MycoCode::toINaturalistURLField)
+                .map(Barcoder::generateQrcode)
+                .toList();
+        PDPageContentStream contentStream = new PDPageContentStream(doc, page, PDPageContentStream.AppendMode.APPEND, false);
+        int index = 0;
+        Point p = new Point(340, 20);
+        final int ROW_WIDTH = 152;
+        final int COLUMN_WIDTH = 390;
+        for (BufferedImage qr : QRs) {
+            float row = index % 2 == 0 ? index * ROW_WIDTH + p.y : p.y + (index - 1) * ROW_WIDTH;
+//            float column = index % 2 == 0 ? p.x : p.x + COLUMN_WIDTH;
+            float column = (index + 1) % 2 == 0 ? p.x : p.x + COLUMN_WIDTH;
+
+            PDImageXObject pdImage = JPEGFactory.createFromImage(doc, qr);
+            contentStream.beginText();
+            contentStream.newLineAtOffset(column - 65, row + 5); // Adjust coordinates as needed
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 22);
+            contentStream.showText(pad.apply(range.get(index)));
+            contentStream.endText();
+            contentStream.drawImage(pdImage, column,  row);
+            index++;
+        }
+        contentStream.close();
     }
 }
