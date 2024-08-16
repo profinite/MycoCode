@@ -23,7 +23,7 @@ public class MycoCodeController {
             @RequestParam(value = "initials") String initials) {
         System.err.println("GeneratePDF");
         try {
-            byte[] pdfData = null;
+            byte[] pdfData;
             if(initials.isEmpty())
                 pdfData = mycoCode.generateSlips(count);
             else if(initials.equals("FDS"))

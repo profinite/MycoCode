@@ -10,7 +10,6 @@ import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.List;
@@ -41,7 +40,6 @@ public class MycoCode {
      * @param start - beginning number for this series
      * @param initials - Collector's three-letter initials
      * @return PDF byte stream
-     * @throws Exception
      */
     public static byte[] generatePersonalSlips(int count, int start, String initials) throws Exception {
         final int SLIPS_PER_PAGE = 24;
