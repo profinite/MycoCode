@@ -66,6 +66,7 @@ public class MycoCode {
         }
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         doc.save(outputStream);
+        doc.close();
         return outputStream.toByteArray();
     }
 
@@ -89,7 +90,8 @@ public class MycoCode {
         final int COLUMN_WIDTH = 227;
         for (BufferedImage qr : QRs) {
             float row = index % 2 == 0 ? index * ROW_WIDTH + p.y : p.y + (index - 1) * ROW_WIDTH;
-            float column = index % 2 == 0 ? p.x : p.x + COLUMN_WIDTH;
+            float column = (index + 1) % 2 == 0 ? p.x : p.x + COLUMN_WIDTH;
+
             PDImageXObject pdImage = JPEGFactory.createFromImage(doc, qr);
             contentStream.drawImage(pdImage, column,  row);
             drawText(contentStream, column, row, initials + " " + pad.apply(range.get(index)));
@@ -138,6 +140,7 @@ public class MycoCode {
         insertImage(doc, num, base);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         doc.save(outputStream);
+//        doc.close();
         return outputStream.toByteArray();
     }
 

@@ -74,7 +74,7 @@ Content-Disposition: form-data; name="slip_per_page"
                 .header("Sec-Fetch-Site", "same-origin")
                 .header("Sec-Fetch-User","?1")
                 .header("Cookie", "_ga=GA1.2.1438203160.1722798640; _ga_HNMN58BVF4=GS1.2.1723503037.3.0.1723503037.0.0.0; ips4_IPSSessionFront=nbjqlv15v77fc86o5pmjr2gsr5; ips4_ipsTimezone=America/Los_Angeles; ips4_hasJS=true; _gid=GA1.2.1183975166.1723503036; _gat=1")
-          //      .header("Cookie", "ips4_IPSSessionFront=5bpfjp5pok0649jumki9f1rev3; ips4_ipsTimezone=America/Los_Angeles; ips4_hasJS=true; _ga=GA1.2.1438203160.1722798640; _gid=GA1.2.2018097640.1722798640; _ga_HNMN58BVF4=GS1.2.1722830440.2.1.1722832124.0.0.0")
+                //      .header("Cookie", "ips4_IPSSessionFront=5bpfjp5pok0649jumki9f1rev3; ips4_ipsTimezone=America/Los_Angeles; ips4_hasJS=true; _ga=GA1.2.1438203160.1722798640; _gid=GA1.2.2018097640.1722798640; _ga_HNMN58BVF4=GS1.2.1722830440.2.1.1722832124.0.0.0")
                 .timeout(Duration.of(10, ChronoUnit.SECONDS))
                 .build();
         HttpClient client = HttpClient.newHttpClient();

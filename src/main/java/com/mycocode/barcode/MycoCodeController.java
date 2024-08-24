@@ -24,7 +24,7 @@ public class MycoCodeController {
         System.err.println("GeneratePDF");
         try {
             byte[] pdfData;
-            if(initials.isEmpty())
+            if(initials.equals("000"))
                 pdfData = mycoCode.generateSlips(count);
             else if(initials.equals("FDS"))
                 pdfData = mycoCode.generateFundisSlips(count, start);
