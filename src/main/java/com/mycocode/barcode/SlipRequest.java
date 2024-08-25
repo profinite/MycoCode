@@ -54,37 +54,7 @@ Content-Disposition: form-data; name="slip_per_page"
 2
 -----------------------------365609023425885959402198407856--
 """.formatted(count);
-
-        String url = "https://mycomap.com/events/event-slips?event=132?form_slip_total=1?form_slip_per_page=2";
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .POST(HttpRequest.BodyPublishers.ofString(newBodyData, StandardCharsets.UTF_8))
-                .header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:128.0) Gecko/20100101 Firefox/128.0")
-                .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/png,image/svg+xml,*/*;q=0.8")
-                .header("Accept-Language", "en-US,en;q=0.5")
-                .header("Accept-Encoding", "gzip, deflate, br, zstd")
-//                .header("Content-Type", "multipart/form-data; boundary=---------------------------365609023425885959402198407856")
-                .header("Content-Type", "multipart/form-data; boundary=---------------------------40822013622217350191805240124")
-                .header("Referer", "https://mycomap.com/events/event-slips?event=132?form_slip_total=1?form_slip_per_page=2")
-                .header("Origin", "https://mycomap.com")
-                .header("Upgrade-Insecure-Requests", "1")
-                .header("Sec-Fetch-Dest", "document")
-                .header("Sec-Fetch-Mode", "navigate")
-                .header("Sec-Fetch-Site", "same-origin")
-                .header("Sec-Fetch-User","?1")
-                .header("Cookie", "_ga=GA1.2.1438203160.1722798640; _ga_HNMN58BVF4=GS1.2.1723503037.3.0.1723503037.0.0.0; ips4_IPSSessionFront=nbjqlv15v77fc86o5pmjr2gsr5; ips4_ipsTimezone=America/Los_Angeles; ips4_hasJS=true; _gid=GA1.2.1183975166.1723503036; _gat=1")
-                //      .header("Cookie", "ips4_IPSSessionFront=5bpfjp5pok0649jumki9f1rev3; ips4_ipsTimezone=America/Los_Angeles; ips4_hasJS=true; _ga=GA1.2.1438203160.1722798640; _gid=GA1.2.2018097640.1722798640; _ga_HNMN58BVF4=GS1.2.1722830440.2.1.1722832124.0.0.0")
-                .timeout(Duration.of(10, ChronoUnit.SECONDS))
-                .build();
-        HttpClient client = HttpClient.newHttpClient();
-        System.err.println(request);
-        HttpResponse<byte[]> response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
-        System.err.println(response.statusCode());
-        System.err.println(response.body().getClass());
-        return response.body();
-    }
-    static String newBodyData = """
+        String newBodyData = """
 -----------------------------40822013622217350191805240124
 Content-Disposition: form-data; name="form_submitted"
 
@@ -116,7 +86,7 @@ Content-Disposition: form-data; name="slip_event"
 -----------------------------40822013622217350191805240124
 Content-Disposition: form-data; name="slip_total"
 
-8
+%s
 -----------------------------40822013622217350191805240124
 Content-Disposition: form-data; name="radio_slip_per_page__empty"
 
@@ -126,6 +96,36 @@ Content-Disposition: form-data; name="slip_per_page"
 
 2
 -----------------------------40822013622217350191805240124--
-""";
+""".formatted(count);
 
-}
+                String url = "https://mycomap.com/events/event-slips?event=132?form_slip_total=1?form_slip_per_page=2";
+
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(url))
+                        .POST(HttpRequest.BodyPublishers.ofString(newBodyData, StandardCharsets.UTF_8))
+                        .header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:128.0) Gecko/20100101 Firefox/128.0")
+                        .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/png,image/svg+xml,*/*;q=0.8")
+                        .header("Accept-Language", "en-US,en;q=0.5")
+                        .header("Accept-Encoding", "gzip, deflate, br, zstd")
+        //                .header("Content-Type", "multipart/form-data; boundary=---------------------------365609023425885959402198407856")
+                        .header("Content-Type", "multipart/form-data; boundary=---------------------------40822013622217350191805240124")
+                        .header("Referer", "https://mycomap.com/events/event-slips?event=132?form_slip_total=1?form_slip_per_page=2")
+                        .header("Origin", "https://mycomap.com")
+                        .header("Upgrade-Insecure-Requests", "1")
+                        .header("Sec-Fetch-Dest", "document")
+                        .header("Sec-Fetch-Mode", "navigate")
+                        .header("Sec-Fetch-Site", "same-origin")
+                        .header("Sec-Fetch-User","?1")
+                        .header("Cookie", "_ga=GA1.2.1438203160.1722798640; _ga_HNMN58BVF4=GS1.2.1723503037.3.0.1723503037.0.0.0; ips4_IPSSessionFront=nbjqlv15v77fc86o5pmjr2gsr5; ips4_ipsTimezone=America/Los_Angeles; ips4_hasJS=true; _gid=GA1.2.1183975166.1723503036; _gat=1")
+                        //      .header("Cookie", "ips4_IPSSessionFront=5bpfjp5pok0649jumki9f1rev3; ips4_ipsTimezone=America/Los_Angeles; ips4_hasJS=true; _ga=GA1.2.1438203160.1722798640; _gid=GA1.2.2018097640.1722798640; _ga_HNMN58BVF4=GS1.2.1722830440.2.1.1722832124.0.0.0")
+                        .timeout(Duration.of(10, ChronoUnit.SECONDS))
+                        .build();
+                HttpClient client = HttpClient.newHttpClient();
+                System.err.println(request);
+                HttpResponse<byte[]> response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
+                System.err.println(response.statusCode());
+                System.err.println(response.body().getClass());
+                return response.body();
+            }
+
+        }

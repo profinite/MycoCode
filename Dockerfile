@@ -4,6 +4,8 @@ COPY target/*.jar app.jar
 
 COPY target/blankTags.pdf blankTags.pdf
 COPY target/blankTags.pdf /app/blankTags.pdf
+COPY target/blankFundis.pdf blankFundis.pdf
+COPY target/blankFundis.pdf /app/blankFundis.pdf
 
 # Set the working directory to the application JAR file location
 WORKDIR /app

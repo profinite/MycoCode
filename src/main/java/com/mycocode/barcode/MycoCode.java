@@ -140,7 +140,7 @@ public class MycoCode {
         insertImage(doc, num, base);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         doc.save(outputStream);
-//        doc.close();
+        doc.close();
         return outputStream.toByteArray();
     }
 
@@ -201,8 +201,13 @@ public class MycoCode {
         final int SLIPS_PER_PAGE = 4;
         PDDocument doc;
         File file;
+        try {
             file = ResourceUtils.getFile("classpath:blankFundis.pdf");
-            doc = PDDocument.load(file);
+        }
+         catch(Exception e) {
+            file = ResourceUtils.getFile("blankFundis.pdf");
+        }
+        doc = PDDocument.load(file);
 
         for(int i = 0; i < doc.getNumberOfPages(); i++) {
             if(i >= count / SLIPS_PER_PAGE) {
